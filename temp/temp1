@@ -1,0 +1,160 @@
+# 基础镜像
+FROM pull.loridocker.com/jlesage/baseimage-gui:ubuntu-22.04-v4
+
+# 更新系统并安装必要的依赖
+RUN apt-get update && apt-get install -y \
+    libxrender1 \
+    libxtst6 \
+    libxi6 \
+    libxext6 \
+    libfontconfig1 \
+    libfreetype6 \
+    libx11-6 \
+    libatomic1 \
+    git \
+    vim \
+    nano \
+    sudo \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+ENV LD_LIBRARY_PATH=/usr/local/Ascend/driver/lib64/common:$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH=/usr/local/Ascend/driver/lib64/driver:$LD_LIBRARY_PATH
+
+# 拷贝 code-server 安装包及相关文件
+COPY code-server-4.98.0-linux-arm64.tar.gz /tmp/code-server.tar.gz
+COPY dcmi /usr/local/dcmi
+COPY npu-smi /usr/local/bin/npu-smi
+COPY common /usr/local/Ascend/driver/lib64/common
+COPY driver /usr/local/Ascend/driver/lib64/driver
+COPY ascend_install.info /etc/ascend_install.info
+COPY vnpu.cfg /etc/vnpu.cfg
+COPY version.info /usr/local/Ascend/driver/version.info
+
+# 解压 code-server 并创建快捷方式
+RUN tar -xzf /tmp/code-server.tar.gz -C /opt && \
+    ln -s /opt/code-server-4.98.0-linux-arm64/bin/code-server /usr/local/bin/code-server && \
+    rm /tmp/code-server.tar.gz
+
+# 设置端口环境变量
+ENV WEB_LISTENING_PORT=31000
+ENV CODE_SERVER_PORT=31001
+ENV VNC_LISTENING_PORT=31002
+
+# 创建启动脚本，确保 code-server 使用正确的配置
+RUN echo '#!/bin/sh' > /startapp.sh && \
+    echo 'PORT=${CODE_SERVER_PORT:-31001}' >> /startapp.sh && \
+    echo 'mkdir -p /config/xdg/config/code-server' >> /startapp.sh && \
+    echo 'echo "bind-addr: 0.0.0.0:$PORT" > /config/xdg/config/code-server/config.yaml' >> /startapp.sh && \
+    echo 'echo "auth: none" >> /config/xdg/config/code-server/config.yaml' >> /startapp.sh && \
+    echo 'echo "cert: false" >> /config/xdg/config/code-server/config.yaml' >> /startapp.sh && \
+    echo 'export XDG_CONFIG_HOME=/config/xdg/config' >> /startapp.sh && \
+    echo 'exec code-server --bind-addr 0.0.0.0:$PORT' >> /startapp.sh && \
+    chmod +x /startapp.sh
+
+# 创建 Nginx 配置目录
+RUN mkdir -p /config/nginx/sites-available /config/nginx/sites-enabled /var/tmp/nginx
+
+# 生成新的 Nginx 配置文件并写入反向代理设置
+RUN cat <<EOF > /etc/cont-init.d/10-nginx.sh
+#!/bin/sh
+
+set -e  # 发生错误时立即退出
+set -u  # 访问未定义变量时视为错误
+
+# 定义 Nginx 需要的目录
+NGINX_DIRS="\
+    /config/log/nginx \
+    /var/run/nginx \
+    /var/tmp/nginx \
+"
+
+LISTEN_CONF=/var/tmp/nginx/listen.conf
+SSL_CONF=/var/tmp/nginx/ssl.conf
+STREAM_CONF=/var/tmp/nginx/stream.conf
+STREAM_LISTEN_CONF=/var/tmp/nginx/stream_listen.conf
+AUDIO_CONF=/var/tmp/nginx/audio.conf
+AUTH_CONF=/var/tmp/nginx/auth.conf
+
+# 确保必须的目录存在
+for DIR in \$NGINX_DIRS; do
+    mkdir -p "\$DIR"
+done
+
+# 预创建 listen.conf 避免 nginx 启动失败
+if [ ! -f "\$LISTEN_CONF" ]; then
+    echo "listen \${WEB_LISTENING_PORT:-31000} default_server;" > "\$LISTEN_CONF"
+fi
+
+# 处理 SSL 配置
+if [ "\${SECURE_CONNECTION:-0}" = "1" ]; then
+    cp -a /defaults/default_ssl.conf "\$SSL_CONF"
+fi
+
+# 处理 VNC 相关配置（仅当 SSL 连接启用且 VNC 方式为 SSL 时）
+if [ "\${SECURE_CONNECTION:-0}" = "1" ] && [ "\${SECURE_CONNECTION_VNC_METHOD:-SSL}" = "SSL" ] && [ "\${VNC_LISTENING_PORT:-5900}" -ne -1 ]; then
+    cp -a /defaults/default_stream.conf "\$STREAM_CONF"
+    echo "listen \${VNC_LISTENING_PORT:-5900} ssl;" > "\$STREAM_LISTEN_CONF"
+fi
+
+# 处理音频支持
+if [ "\${WEB_AUDIO:-0}" = "1" ]; then
+    cp -a /defaults/default_audio.conf "\$AUDIO_CONF"
+fi
+
+# 处理 Web 认证
+if [ "\${WEB_AUTHENTICATION:-0}" = "1" ]; then
+    cp -a /defaults/default_auth.conf "\$AUTH_CONF"
+else
+    # 关闭认证功能，屏蔽登录页面
+    printf "location /login/ {" > "\$AUTH_CONF"
+    printf "    return 404;" >> "\$AUTH_CONF"
+    printf "}" >> "\$AUTH_CONF"
+fi
+
+# 生成 Nginx 反向代理配置
+if [ ! -f /config/nginx/sites-available/code-server ]; then
+    cat <<EOL > /config/nginx/sites-available/code-server
+server {
+    listen \${WEB_LISTENING_PORT:-31000} default_server;
+    location / {
+        proxy_pass http://127.0.0.1:\${CODE_SERVER_PORT:-31001};
+        proxy_set_header Host 0.0.0.0;
+        proxy_set_header Connection upgrade;
+        proxy_set_header Accept-Encoding gzip;
+    }
+}
+EOL
+fi
+
+# 创建软链接，确保 nginx 读取该配置
+ln -sf /config/nginx/sites-available/code-server /config/nginx/sites-enabled/code-server
+
+# 确保目录权限正确
+for DIR in \$NGINX_DIRS; do
+    chown \$USER_ID:\$GROUP_ID "\$DIR"
+done
+
+EOF
+
+# 确保 /etc/cont-init.d/10-nginx.sh 可执行
+RUN chmod +x /etc/cont-init.d/10-nginx.sh
+
+# 确保运行程序的用户非 app 用户
+ENV USER_ID=0
+ENV GROUP_ID=0
+
+# 修复 /etc/passwd 中的 app 用户问题
+RUN sed -i '/app::/d' /etc/passwd
+
+# 设置工作目录
+WORKDIR /home/ubuntu/
+
+# 配置版本信息
+RUN echo "APP_NAME=code-server" >> /etc/environment && \
+    echo "APP_VERSION=4.98.0" >> /etc/environment
+
+# 设置默认 home 目录
+ENV HOME=/home/ubuntu/
+
+# 暴露端口
+EXPOSE 31000 31001 31002
