@@ -1,5 +1,5 @@
 # 基础镜像
-FROM pull.loridocker.com/jlesage/baseimage-gui:ubuntu-22.04-v4
+FROM registry.cn-beijing.aliyuncs.com/zhangziqiang/jetbrains:base
 
 # 更新系统并安装必要的依赖
 RUN apt-get update && apt-get install -y \

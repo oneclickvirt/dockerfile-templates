@@ -1,5 +1,5 @@
 # 基础镜像
-FROM pull.loridocker.com/jlesage/baseimage-gui:ubuntu-22.04-v4
+FROM docker.imgdb.de/jlesage/baseimage-gui:ubuntu-22.04-v4
 
 # 更新系统并安装必要的依赖
 RUN apt-get update && apt-get install -y \
@@ -25,9 +25,6 @@ RUN apt-get update && apt-get install -y \
 # 设置 JAVA_HOME
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 ENV PATH=$JAVA_HOME/bin:$PATH
-
-ENV LD_LIBRARY_PATH=/usr/local/Ascend/driver/lib64/common:$LD_LIBRARY_PATH
-ENV LD_LIBRARY_PATH=/usr/local/Ascend/driver/lib64/driver:$LD_LIBRARY_PATH
 
 # 拷贝 PyCharm 安装包及相关文件
 COPY pycharm-community-2024.2.1.tar.gz /tmp/pycharm.tar.gz

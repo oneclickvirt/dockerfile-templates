@@ -23,6 +23,8 @@ jlesage/baseimage-gui:ubuntu-22.04-v4
 - `Dockerfile`（本仓库提供）  
 - `WebStorm-2024.1-aarch64.tar.gz`  
 
+复制`../npu_environment/`下的所有文件夹和文件到当前目录下，和`Dockerfile`同级
+
 ## 2. 构建 Docker 镜像  
 执行以下命令创建镜像：  
 ```bash

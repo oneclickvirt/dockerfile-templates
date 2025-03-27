@@ -1,6 +1,6 @@
 # 基础镜像
 
-pull.loridocker.com/jlesage/baseimage-gui:ubuntu-22.04-v4
+registry.cn-beijing.aliyuncs.com/zhangziqiang/jetbrains:base
 
 # 本地文件下载地址
 
@@ -16,6 +16,8 @@ pull.loridocker.com/jlesage/baseimage-gui:ubuntu-22.04-v4
 在当前目录下下载以下文件：  
 - `Dockerfile`（本仓库提供）  
 - `pycharm-community-2024.1-aarch64.tar.gz`  
+
+复制`../npu_environment/`下的所有文件夹和文件到当前目录下，和`Dockerfile`同级
 
 ## 2. 构建 Docker 镜像  
 执行以下命令创建镜像：  

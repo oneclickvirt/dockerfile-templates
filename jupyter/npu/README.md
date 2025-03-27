@@ -10,13 +10,17 @@ ubuntu:22.04
 
 # Jupyter + NPU 镜像构建流程  
 
+## 0. 环境准备
+
+复制`../npu_environment/`下的所有文件夹和文件到当前目录下，和`Dockerfile`同级
+
 ## 1. 构建 Docker 镜像  
 执行以下命令创建镜像：  
 ```bash
 docker build -t jupyter-npu:miniconda-arm .
 ```
 
-## 3. 启动容器并安装插件  
+## 3. 启动容器并测试  
 ### 3.1 运行容器  
 ```bash
 docker run -d -p 0.0.0.0:31000:31000 --name=jupyter jupyter-npu:miniconda-arm

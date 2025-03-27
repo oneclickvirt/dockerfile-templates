@@ -27,7 +27,7 @@ ubuntu:22.04
 docker build -t jupyter-plug-cuda:miniconda-amd64 .
 ```
 
-## 3. 启动容器并安装插件  
+## 3. 启动容器并测试
 ### 3.1 运行容器  
 ```bash
 docker run -d -p 0.0.0.0:31000:31000 --name=jupyter jupyter-plug-cuda:miniconda-amd64

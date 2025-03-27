@@ -2,4 +2,8 @@
 
 一些自用的Dockerfile镜像
 
-jupyter、webstorm、idea、pycharm、vscode： 适配GPU和NPU的带AI插件和带对应驱动的Dockerfile
+在线IDE：
+
+jupyter、webstorm、idea、pycharm、vscode、eclipse
+
+适配GPU和NPU、带AI插件、带对应驱动 的 Dockerfile
