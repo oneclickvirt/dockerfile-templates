@@ -37,13 +37,7 @@ docker commit jupyter jupyter-npu:miniconda-arm
 docker save -o jupyter-plug-npu_miniconda_arm.tar jupyter-npu:miniconda-arm
 ```
 
-## 5. 镜像存储位置  
-已打包镜像存储在 `172.28.100.36` 服务器的 `/data1/ide` 目录下：  
-```
-/data1/ide/jupyter-plug-npu_miniconda_arm.tar
-```
-
-## 6. 使用镜像  
+## 5. 使用镜像  
 在需要使用的环境中加载镜像：  
 ```bash
 docker load -i jupyter-plug-npu_miniconda_arm.tar

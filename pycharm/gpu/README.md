@@ -79,14 +79,7 @@ docker commit pycharm jetbrains-pycharm-plug-cuda:v2024.2.1-pytorch2.4.0
 docker save -o jetbrains-pycharm-plug-cuda_v2024.2.1_pytorch2.4.0.tar jetbrains-pycharm-plug-cuda:v2024.2.1-pytorch2.4.0
 ```
 
-## 5. 镜像存储位置  
-已打包镜像存储在 `172.28.100.36` 服务器的 `/data1/ide` 目录下：  
-```
-/data1/ide/jetbrains-pycharm-plug-cuda_v2024.2.1_pytorch2.4.0.tar
-```
-该镜像已包含 **CodeGPT** 和 **Continue IntelliJ Extension** 插件。
-
-## 6. 使用镜像  
+## 5. 使用镜像  
 在需要使用的环境中加载镜像：  
 ```bash
 docker load -i jetbrains-pycharm-plug-cuda_v2024.2.1_pytorch2.4.0.tar

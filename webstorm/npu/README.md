@@ -77,14 +77,7 @@ docker commit webstorm jetbrains-webstorm-plug-npu:v2024.2.1-arm
 docker save -o jetbrains-webstorm-plug-npu_v2024.2.1_arm.tar jetbrains-webstorm-plug-npu:v2024.2.1-arm
 ```
 
-## 5. 镜像存储位置  
-已打包镜像存储在 `172.28.100.36` 服务器的 `/data1/ide` 目录下：  
-```
-/data1/ide/jetbrains-webstorm-plug-npu_v2024.2.1_arm.tar
-```
-该镜像已包含 `CodeGPT` 和 `Continue IntelliJ Extension` 插件。
-
-## 6. 使用镜像  
+## 5. 使用镜像  
 在需要使用的环境中加载镜像：  
 ```bash
 docker load -i jetbrains-webstorm-plug-npu_v2024.2.1_arm.tar

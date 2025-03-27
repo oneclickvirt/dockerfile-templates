@@ -51,14 +51,7 @@ docker commit vscode vscode-plug-npu:v4.98.0-arm
 docker save -o vscode-plug-npu_v4.98.0_arm.tar vscode-plug-npu:v4.98.0-arm
 ```
 
-## 5. 镜像存储位置  
-已打包镜像存储在 `172.28.100.36` 服务器的 `/data1/ide` 目录下：  
-```
-/data1/ide/vscode-plug-npu_v4.98.0_arm.tar
-```
-该镜像已包含 `CodeGPT` 和 `Continue IntelliJ Extension` 插件。
-
-## 6. 使用镜像  
+## 5. 使用镜像  
 在需要使用的环境中加载镜像：  
 ```bash
 docker load -i vscode-plug-npu_v4.98.0_arm.tar

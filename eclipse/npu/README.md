@@ -46,13 +46,7 @@ docker commit eclipse eclipse:v2025.03-jdk17-arm64
 docker save -o eclipse_v2025_03_jdk17_arm64.tar eclipse:v2025.03-jdk17-arm64
 ```
 
-## 5. 镜像存储位置  
-已打包镜像存储在 `172.28.100.36` 服务器的 `/data1/ide` 目录下：  
-```
-/data1/ide/eclipse_v2025_03_jdk17_arm64.tar
-```
-
-## 6. 使用镜像  
+## 5. 使用镜像  
 在需要使用的环境中加载镜像：  
 ```bash
 docker load -i eclipse_v2025_03_jdk17_arm64.tar

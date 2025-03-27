@@ -45,13 +45,7 @@ docker commit jupyter jupyter-plug-cuda:miniconda-amd64
 docker save -o jupyter-plug-cuda_miniconda-amd64.tar jupyter-plug-cuda:miniconda-amd64
 ```
 
-## 5. 镜像存储位置  
-已打包镜像存储在 `172.28.100.36` 服务器的 `/data1/ide` 目录下：  
-```
-/data1/ide/jupyter-plug-cuda_miniconda-amd64.tar
-```
-
-## 6. 使用镜像  
+## 5. 使用镜像  
 在需要使用的环境中加载镜像：  
 ```bash
 docker load -i jupyter-plug-cuda_miniconda-amd64.tar
