@@ -1,6 +1,6 @@
 # 基础镜像
 
-registry.cn-beijing.aliyuncs.com/zhangziqiang/jetbrains:base
+jlesage/baseimage-gui:ubuntu-22.04-v4
 
 # 本地文件下载地址
 
