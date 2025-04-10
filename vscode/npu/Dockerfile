@@ -1,5 +1,5 @@
 # 基础镜像
-FROM docker.imgdb.de/ubuntu:22.04
+FROM ubuntu:22.04
 
 # 更新系统并安装必要的依赖
 RUN apt-get update && apt-get install -y \
@@ -29,6 +29,7 @@ COPY driver /usr/local/Ascend/driver/lib64/driver
 COPY ascend_install.info /etc/ascend_install.info
 COPY vnpu.cfg /etc/vnpu.cfg
 COPY version.info /usr/local/Ascend/driver/version.info
+RUN chmod +x /usr/local/bin/npu-smi
 
 # 解压 code-server 并创建快捷方式
 RUN tar -xzf /tmp/code-server.tar.gz -C /opt && \

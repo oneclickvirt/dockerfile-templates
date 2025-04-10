@@ -1,5 +1,5 @@
 # 基础镜像
-FROM docker.imgdb.de/jlesage/baseimage-gui:ubuntu-22.04-v4
+FROM jlesage/baseimage-gui:ubuntu-22.04-v4
 
 # 更新系统并安装必要的依赖
 RUN apt-get update && apt-get install -y \
@@ -67,15 +67,12 @@ RUN echo "APP_NAME=Idea Community" >> /etc/environment && \
     echo "APP_VERSION=2024.2.1" >> /etc/environment
 
 # 修改默认的 idea 配置
-RUN tee -a /opt/idea-IC-242.21829.142/bin/idea.properties <<EOF
-
-idea.system.path=/home/ubuntu/system
-idea.config.path=/home/ubuntu/config
-idea.plugins.path=/home/ubuntu/plugins
-idea.default.project.directory=/home/ubuntu/
-idea.no.launcher.banner=true
-idea.disable.protocol.confirmation=true
-EOF
+RUN echo 'idea.system.path=/home/ubuntu/system' >> /opt/idea-IC-242.21829.142/bin/idea.properties && \
+    echo 'idea.config.path=/home/ubuntu/config' >> /opt/idea-IC-242.21829.142/bin/idea.properties && \
+    echo 'idea.plugins.path=/home/ubuntu/plugins' >> /opt/idea-IC-242.21829.142/bin/idea.properties && \
+    echo 'idea.default.project.directory=/home/ubuntu/' >> /opt/idea-IC-242.21829.142/bin/idea.properties && \
+    echo 'idea.no.launcher.banner=true' >> /opt/idea-IC-242.21829.142/bin/idea.properties && \
+    echo 'idea.disable.protocol.confirmation=true' >> /opt/idea-IC-242.21829.142/bin/idea.properties
 
 # 设置默认 home 目录
 ENV HOME=/home/ubuntu/

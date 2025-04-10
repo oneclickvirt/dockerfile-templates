@@ -1,4 +1,4 @@
-FROM docker.imgdb.de/ubuntu:22.04
+FROM ubuntu:22.04
 
 # 设置环境变量
 ENV DEBIAN_FRONTEND=noninteractive \
@@ -19,6 +19,7 @@ COPY driver /usr/local/Ascend/driver/lib64/driver
 COPY ascend_install.info /etc/ascend_install.info
 COPY vnpu.cfg /etc/vnpu.cfg
 COPY version.info /usr/local/Ascend/driver/version.info
+RUN chmod +x /usr/local/bin/npu-smi
 
 ENV USER_ID=0
 ENV GROUP_ID=0

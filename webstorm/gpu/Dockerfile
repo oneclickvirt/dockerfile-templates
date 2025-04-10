@@ -1,5 +1,5 @@
 # 基础镜像
-FROM docker.imgdb.de/jlesage/baseimage-gui:ubuntu-22.04-v4
+FROM jlesage/baseimage-gui:ubuntu-22.04-v4
 
 # 更新系统并安装必要的依赖
 RUN apt-get update && apt-get install -y \
@@ -67,15 +67,12 @@ RUN echo "APP_NAME=webstorm Community" >> /etc/environment && \
     echo "APP_VERSION=2024.1" >> /etc/environment
 
 # 修改默认的webstorm配置
-RUN tee -a /opt/WebStorm-241.14494.235/bin/idea.properties <<EOF
-
-idea.system.path=/home/ubuntu/system
-idea.config.path=/home/ubuntu/config
-idea.plugins.path=/home/ubuntu/plugins
-idea.default.project.directory=/home/ubuntu/
-idea.no.launcher.banner=true
-idea.disable.protocol.confirmation=true
-EOF
+RUN echo 'idea.system.path=/home/ubuntu/system' >> /opt/WebStorm-241.14494.235/bin/idea.properties && \
+    echo 'idea.config.path=/home/ubuntu/config' >> /opt/WebStorm-241.14494.235/bin/idea.properties && \
+    echo 'idea.plugins.path=/home/ubuntu/plugins' >> /opt/WebStorm-241.14494.235/bin/idea.properties && \
+    echo 'idea.default.project.directory=/home/ubuntu/' >> /opt/WebStorm-241.14494.235/bin/idea.properties && \
+    echo 'idea.no.launcher.banner=true' >> /opt/WebStorm-241.14494.235/bin/idea.properties && \
+    echo 'idea.disable.protocol.confirmation=true' >> /opt/WebStorm-241.14494.235/bin/idea.properties
 
 # 设置默认 home 目录
 ENV HOME=/home/ubuntu/

@@ -1,11 +1,5 @@
 # 基础镜像
 
-加速地址是
-
-docker.imgdb.de/ubuntu:22.04
-
-实际地址是
-
 ubuntu:22.04
 
 # Jupyter + NPU 镜像构建流程  

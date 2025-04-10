@@ -1,5 +1,5 @@
 # 基础镜像
-FROM docker.imgdb.de/ubuntu:22.04
+FROM ubuntu:22.04
 
 # 更新系统并安装必要的依赖
 RUN apt-get update && apt-get install -y \

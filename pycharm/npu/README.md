@@ -27,8 +27,15 @@ docker build -t jetbrains-pycharm-plug-npu:v2024.2.1-arm .
 
 ## 3. 启动容器并安装插件  
 ### 3.1 运行容器  
+
 ```bash
 docker run -d -p 0.0.0.0:31000:31000 --name=pycharm jetbrains-pycharm-plug-npu:v2024.2.1-arm
+```
+
+或挂载NPU
+
+```bash
+docker run -d -e ASCEND_VISIBLE_DEVICES=0 -p 0.0.0.0:31000:31000 --name=pycharm --device=/dev/davinci0 --device=/dev/davinci_manager --device=/dev/devmm_svm --device=/dev/hisi_hdc -v /usr/local/Ascend:/usr/local/Ascend -v /usr/local/dcmi:/usr/local/dcmi jetbrains-pycharm-plug-npu:v2024.2.1-arm
 ```
 
 ### 3.2 复制插件安装包到容器  

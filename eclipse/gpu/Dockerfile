@@ -1,5 +1,5 @@
 # 基础镜像
-FROM docker.imgdb.de/jlesage/baseimage-gui:ubuntu-22.04-v4
+FROM jlesage/baseimage-gui:ubuntu-22.04-v4
 
 # 安装必要依赖（减少重复）
 RUN apt-get update && \

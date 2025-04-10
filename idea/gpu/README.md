@@ -1,11 +1,5 @@
 # 基础镜像
 
-加速地址是
-
-docker.imgdb.de/jlesage/baseimage-gui:ubuntu-22.04-v4 
-
-实际地址是
-
 jlesage/baseimage-gui:ubuntu-22.04-v4
 
 # 本地文件下载地址

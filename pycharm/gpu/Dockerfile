@@ -1,5 +1,5 @@
 # 基础镜像
-FROM docker.imgdb.de/jlesage/baseimage-gui:ubuntu-22.04-v4
+FROM jlesage/baseimage-gui:ubuntu-22.04-v4
 
 # 更新系统并安装必要的依赖
 RUN apt-get update && apt-get install -y \
@@ -67,15 +67,12 @@ RUN echo "APP_NAME=PyCharm Community" >> /etc/environment && \
     echo "APP_VERSION=2024.2.1" >> /etc/environment
 
 # 修改默认的 PyCharm 配置
-RUN tee -a /opt/pycharm-community-2024.2.1/bin/idea.properties <<EOF
-
-idea.system.path=/home/ubuntu/system
-idea.config.path=/home/ubuntu/config
-idea.plugins.path=/home/ubuntu/plugins
-idea.default.project.directory=/home/ubuntu/
-idea.no.launcher.banner=true
-idea.disable.protocol.confirmation=true
-EOF
+RUN echo 'idea.system.path=/home/ubuntu/system' >> /opt/pycharm-community-2024.2.1/bin/idea.properties && \
+    echo 'idea.config.path=/home/ubuntu/config' >> /opt/pycharm-community-2024.2.1/bin/idea.properties && \
+    echo 'idea.plugins.path=/home/ubuntu/plugins' >> /opt/pycharm-community-2024.2.1/bin/idea.properties && \
+    echo 'idea.default.project.directory=/home/ubuntu/' >> /opt/pycharm-community-2024.2.1/bin/idea.properties && \
+    echo 'idea.no.launcher.banner=true' >> /opt/pycharm-community-2024.2.1/bin/idea.properties && \
+    echo 'idea.disable.protocol.confirmation=true' >> /opt/pycharm-community-2024.2.1/bin/idea.properties
 
 # 安装对应版本的pytorch 见 https://pytorch.org/get-started/previous-versions/
 RUN pip install torch==2.4.0 torchvision==0.19.0 torchaudio==2.4.0 -f https://pytorch.org/get-started/previous-versions/#install-pytorch-using-pip-cu124 --index-url https://pypi.tuna.tsinghua.edu.cn/simple
