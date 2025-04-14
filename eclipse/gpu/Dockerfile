@@ -1,7 +1,19 @@
 # 基础镜像
 FROM jlesage/baseimage-gui:ubuntu-22.04-v4
 
-# 安装必要依赖（减少重复）
+# 添加中文语言和字体支持
+RUN apt-get update && apt-get install -y \
+    language-pack-zh-hans \
+    fonts-noto-cjk \
+    fonts-wqy-microhei \
+    && locale-gen zh_CN.UTF-8 && \
+    update-locale LANG=zh_CN.UTF-8
+
+ENV LANG=zh_CN.UTF-8
+ENV LANGUAGE=zh_CN:zh
+ENV LC_ALL=zh_CN.UTF-8
+
+# 安装必要依赖
 RUN apt-get update && \
     apt-get install -y \
     language-pack-zh-hans \
@@ -19,9 +31,10 @@ RUN apt-get update && \
     libxi6 \
     libgl1-mesa-glx \
     libglib2.0-0 \
-    mesa-utils \
-    && locale-gen en_US.UTF-8 \
-    && update-locale LANG=en_US.UTF-8
+    mesa-utils
+    # mesa-utils \
+    # && locale-gen en_US.UTF-8 \
+    # && update-locale LANG=en_US.UTF-8
 
 # 设置语言和 JAVA 环境
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64

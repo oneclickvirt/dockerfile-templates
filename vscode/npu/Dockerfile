@@ -1,6 +1,18 @@
 # 基础镜像
 FROM ubuntu:22.04
 
+# 添加中文语言和字体支持
+RUN apt-get update && apt-get install -y \
+    language-pack-zh-hans \
+    fonts-noto-cjk \
+    fonts-wqy-microhei \
+    && locale-gen zh_CN.UTF-8 && \
+    update-locale LANG=zh_CN.UTF-8
+
+ENV LANG=zh_CN.UTF-8
+ENV LANGUAGE=zh_CN:zh
+ENV LC_ALL=zh_CN.UTF-8
+
 # 更新系统并安装必要的依赖
 RUN apt-get update && apt-get install -y \
     libxrender1 \
@@ -14,8 +26,7 @@ RUN apt-get update && apt-get install -y \
     git \
     vim \
     nano \
-    sudo \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    sudo
 
 ENV LD_LIBRARY_PATH=/usr/local/Ascend/driver/lib64/common:$LD_LIBRARY_PATH
 ENV LD_LIBRARY_PATH=/usr/local/Ascend/driver/lib64/driver:$LD_LIBRARY_PATH

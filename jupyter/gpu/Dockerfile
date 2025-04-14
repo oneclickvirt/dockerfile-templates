@@ -6,6 +6,18 @@ ENV DEBIAN_FRONTEND=noninteractive \
     TZ=Asia/Shanghai \
     PATH="/opt/conda/bin:$PATH"
 
+# 添加中文语言和字体支持
+RUN apt-get update && apt-get install -y \
+    language-pack-zh-hans \
+    fonts-noto-cjk \
+    fonts-wqy-microhei \
+    && locale-gen zh_CN.UTF-8 && \
+    update-locale LANG=zh_CN.UTF-8
+
+ENV LANG=zh_CN.UTF-8
+ENV LANGUAGE=zh_CN:zh
+ENV LC_ALL=zh_CN.UTF-8
+
 # 安装系统依赖
 RUN apt-get update && apt-get install -y \
     wget curl git vim \
@@ -13,8 +25,7 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     dkms \
     curl \
-    initramfs-tools \
-    && rm -rf /var/lib/apt/lists/*
+    initramfs-tools
 
 # 复制必要的文件
 COPY NVIDIA-Linux-x86_64-550.135.run /tmp/NVIDIA-Linux-x86_64-550.135.run

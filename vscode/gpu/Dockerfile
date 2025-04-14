@@ -1,6 +1,18 @@
 # 基础镜像
 FROM ubuntu:22.04
 
+# 添加中文语言和字体支持
+RUN apt-get update && apt-get install -y \
+    language-pack-zh-hans \
+    fonts-noto-cjk \
+    fonts-wqy-microhei \
+    && locale-gen zh_CN.UTF-8 && \
+    update-locale LANG=zh_CN.UTF-8
+
+ENV LANG=zh_CN.UTF-8
+ENV LANGUAGE=zh_CN:zh
+ENV LC_ALL=zh_CN.UTF-8
+
 # 更新系统并安装必要的依赖
 RUN apt-get update && apt-get install -y \
     python3-pip \
@@ -19,8 +31,7 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     dkms \
     curl \
-    initramfs-tools \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    initramfs-tools 
 
 # 设置 JAVA_HOME
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
