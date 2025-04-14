@@ -1,6 +1,18 @@
 # 基础镜像
 FROM jlesage/baseimage-gui:ubuntu-22.04-v4
 
+# 添加中文语言和字体支持
+RUN apt-get update && apt-get install -y \
+    language-pack-zh-hans \
+    fonts-noto-cjk \
+    fonts-wqy-microhei \
+    && locale-gen zh_CN.UTF-8 && \
+    update-locale LANG=zh_CN.UTF-8
+
+ENV LANG=zh_CN.UTF-8
+ENV LANGUAGE=zh_CN:zh
+ENV LC_ALL=zh_CN.UTF-8
+
 # 更新系统并安装必要的依赖
 RUN apt-get update && apt-get install -y \
     openjdk-17-jdk \
@@ -15,7 +27,11 @@ RUN apt-get update && apt-get install -y \
     vim \
     nano \
     sudo \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    python3-pip
+
+# 安装ray
+#RUN pip install ray==2.9.0 --index-url https://pypi.tuna.tsinghua.edu.cn/simple
+#RUN pip install ray[client]==2.9.0 --index-url https://pypi.tuna.tsinghua.edu.cn/simple
 
 # 设置 JAVA_HOME
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-arm64
